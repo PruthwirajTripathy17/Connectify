@@ -15,6 +15,7 @@ import SendIcon from "@mui/icons-material/Send";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 
 import styles from "../styles/videoComponent.module.css";
+import server from "../environment";
 
 const darkTheme = createTheme({
   palette: {
