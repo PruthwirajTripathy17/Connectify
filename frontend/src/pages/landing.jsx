@@ -21,7 +21,7 @@ export default function LandingPage() {
           <p className="nav-link-btn" onClick={() => navigate("/auth")}>Resources</p>
           <p className="nav-link-btn" style={{ marginLeft: "1rem" }} onClick={() => navigate("/auth")}>Sign In</p>
           <div className="nav-primary-btn" onClick={() => navigate("/auth")} role="button">
-            <p style={{ margin: 0 }}>Sign Up Free</p>
+            Sign Up Free
           </div>
         </div>
       </nav>

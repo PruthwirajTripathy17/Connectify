@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { TextField, Button, IconButton, Badge, createTheme, ThemeProvider, CssBaseline } from "@mui/material";
 import io from "socket.io-client";
 import VideocamIcon from "@mui/icons-material/Videocam";
@@ -48,6 +48,7 @@ const peerConfigConnections = {
 };
 
 export default function VideoMeetComponent() {
+  const { url } = useParams();
   var socketRef = useRef();
   let socketIdRef = useRef();
   let localVideoRef = useRef();
@@ -58,6 +59,7 @@ export default function VideoMeetComponent() {
   let [screen, setscreen] = useState();
   let [showModal, setShowModal] = useState(false); // Default to chat closed
   let [screenAvailable, setScreenAvailable] = useState();
+
   let [messages, setMessages] = useState([]);
   let [message, setMessage] = useState("");
   let [newMessages, setNewMessages] = useState(0); // Default to 0 new messages
@@ -237,6 +239,10 @@ export default function VideoMeetComponent() {
       } catch (e) {}
     }
   };
+
+  // getPermissions gets called on mount to fetch camera/mic availability
+
+
 
   useEffect(() => {
     getPermissions();
@@ -434,6 +440,7 @@ export default function VideoMeetComponent() {
     if (!username.trim()) return;
     setAskForUsername(false);
     getMedia();
+    localStorage.setItem("activeCall", url);
   };
 
   let handleVideo = () => {
@@ -534,6 +541,7 @@ export default function VideoMeetComponent() {
       let tracks = localVideoRef.current.srcObject.getTracks();
       tracks.forEach((track) => track.stop());
     } catch (e) {}
+    localStorage.removeItem("activeCall");
     routeTo("/home");
   };
 
@@ -546,13 +554,19 @@ export default function VideoMeetComponent() {
           <div className={styles.lobbyContainer}>
             <div className={styles.lobbyCard}>
               <div className={styles.lobbyLeft}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "1rem" }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "10px", marginBottom: "1rem", flexWrap: "wrap" }}>
                   <VideoCallIcon style={{ color: "#0e71eb", fontSize: "2.5rem" }} />
-                  <h1 style={{ margin: 0, fontSize: "1.8rem", letterSpacing: "-0.5px" }}>Join Meeting Lobby</h1>
+                  <h1 style={{ margin: 0, fontSize: "1.8rem", letterSpacing: "-0.5px", textAlign: "center" }}>Join Meeting Lobby</h1>
                 </div>
                 <p style={{ color: "#989a9c", lineHeight: 1.5, margin: 0 }}>
                   Verify your screen and audio settings before joining the call. Enter your display name to connect.
                 </p>
+
+                {/* Meeting Code Badge Display */}
+                <div className={styles.lobbyCodeBadge}>
+                  <span>Meeting Room Code:</span>
+                  <strong>{url}</strong>
+                </div>
                 
                 <TextField
                   fullWidth
@@ -726,10 +740,11 @@ export default function VideoMeetComponent() {
 
                 <IconButton 
                   onClick={handleEndCall} 
+                  className={styles.endCallButton}
                   sx={{ 
-                    color: "white", 
-                    bgcolor: "#ff3b30",
-                    "&:hover": { bgcolor: "#e02d24", transform: "scale(1.08)" }
+                    color: "white !important", 
+                    bgcolor: "#ff3b30 !important",
+                    "&:hover": { bgcolor: "#e02d24 !important", transform: "scale(1.08)" }
                   }}
                 >
                   <CallEndIcon />

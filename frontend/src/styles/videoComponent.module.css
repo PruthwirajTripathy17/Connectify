@@ -356,4 +356,84 @@
     width: 90%;
     justify-content: center;
   }
+
+  .conferenceView {
+    grid-template-columns: 1fr !important;
+    padding: 1rem;
+    gap: 1rem;
+    height: calc(100vh - 120px);
+  }
+
+  .conferenceView[data-count="1"] {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .lobbyCard {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+  .lobbyLeft h1 {
+    font-size: 1.4rem !important;
+  }
+  .lobbyLeft p {
+    font-size: 0.85rem;
+  }
+  .meetUserVideo {
+    width: 110px;
+    top: 10px;
+    right: 10px;
+    border-width: 1.5px;
+  }
+}
+
+/* Explicit red end call button colors */
+.endCallButton {
+  background-color: #ff3b30 !important;
+  color: #ffffff !important;
+}
+
+.endCallButton:hover {
+  background-color: #e02d24 !important;
+}
+
+/* Meeting code badge inside the lobby card */
+.lobbyCodeBadge {
+  margin-top: 1.5rem;
+  background-color: rgba(14, 113, 235, 0.08);
+  border: 1px solid rgba(14, 113, 235, 0.2);
+  border-radius: 10px;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lobbyCodeBadge span {
+  color: #989a9c;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.lobbyCodeBadge strong {
+  color: #0e71eb;
+  font-family: monospace;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .lobbyCodeBadge {
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+  }
+  .lobbyCodeBadge span {
+    font-size: 0.85rem;
+  }
+  .lobbyCodeBadge strong {
+    font-size: 1rem;
+  }
 }

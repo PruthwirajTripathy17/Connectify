@@ -68,6 +68,7 @@
   padding: 0.5rem 1rem;
   border-radius: 8px;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .nav-link-btn:hover {
@@ -82,6 +83,12 @@
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(217, 117, 0, 0.35);
   transition: all 0.2s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-align: center;
 }
 
 .nav-primary-btn:hover {
@@ -687,5 +694,115 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Landing page nav clean-up: hide extra links to avoid cluttering */
+  .landingPageContainer nav .navList .nav-link-btn:nth-child(1),
+  .landingPageContainer nav .navList .nav-link-btn:nth-child(2),
+  .landingPageContainer nav .navList .nav-link-btn:nth-child(3) {
+    display: none;
+  }
+
+  /* Home dashboard header text cleanup */
+  .navBar {
+    padding: 0.8rem 4%;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .navBar-history-btn span {
+    display: none; /* Hide the text "History Logs", only show the icon on mobile */
+  }
+  .navBar-history-btn {
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Landing page header optimizations to prevent button cutting */
+  .landingPageContainer nav {
+    padding: 0.8rem 4% !important;
+  }
+  .landingPageContainer nav .navHeader h2 {
+    font-size: 1.15rem !important;
+  }
+  .landingPageContainer nav .navList {
+    gap: 0.5rem !important;
+  }
+  .nav-link-btn {
+    padding: 0.4rem 0.6rem !important;
+    font-size: 0.8rem !important;
+  }
+  .nav-primary-btn {
+    padding: 0.4rem 0.8rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Home dashboard adjustments */
+  .meetContainer {
+    padding: 1.5rem 4%;
+    gap: 2rem;
+  }
+  
+  .zoom-action-card {
+    padding: 1.5rem 1rem;
+    border-radius: 16px;
+  }
+  
+  .zoom-icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    margin-bottom: 1rem;
+  }
+  
+  .zoom-icon-circle svg {
+    font-size: 2rem !important;
+  }
+  
+  .zoom-action-card h3 {
+    font-size: 1.05rem;
+  }
+  
+  .clock-time {
+    font-size: 2.6rem;
+  }
+  
+  .landingMainContainer h1 {
+    font-size: 1.8rem;
+  }
+  
+  .landingMainContainer p.hero-subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* Active Call Banner Styles */
+.active-call-banner {
+  background: rgba(48, 176, 88, 0.1);
+  border: 1px solid rgba(48, 176, 88, 0.25);
+  border-radius: 12px;
+  margin: 1.5rem 6% 0 6%;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@media (max-width: 600px) {
+  .active-call-banner {
+    margin: 1rem 4% 0 4%;
+    padding: 0.8rem 1rem;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 12px;
+  }
+  .active-call-banner > div {
+    justify-content: center;
   }
 }

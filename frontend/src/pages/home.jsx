@@ -40,10 +40,24 @@ function HomeComponent() {
 
     // Time States
     const [time, setTime] = useState(new Date());
+    const [activeCall, setActiveCall] = useState(null);
+
     useEffect(() => {
         const timer = setInterval(() => setTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
+
+    useEffect(() => {
+        const storedCall = localStorage.getItem("activeCall");
+        if (storedCall) {
+            setActiveCall(storedCall);
+        }
+    }, []);
+
+    const handleDismissActiveCall = () => {
+        localStorage.removeItem("activeCall");
+        setActiveCall(null);
+    };
 
     const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
     const dateString = time.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
@@ -122,6 +136,38 @@ function HomeComponent() {
                         </Button>
                     </div>
                 </div>
+
+                {/* Active Rejoin Call Notification Banner */}
+                {activeCall && (
+                    <div className="active-call-banner">
+                        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                            <VideoCallIcon style={{ color: "#30b058", fontSize: "1.8rem" }} />
+                            <span style={{ fontSize: "0.95rem" }}>
+                                You left meeting <strong>{activeCall}</strong> without ending the call.
+                            </span>
+                        </div>
+                        <div style={{ display: "flex", gap: "10px" }}>
+                            <Button 
+                                size="small" 
+                                variant="contained" 
+                                color="success" 
+                                onClick={() => handleJoinVideoCall(activeCall)}
+                                sx={{ textTransform: "none", borderRadius: "8px", fontWeight: 700 }}
+                            >
+                                Rejoin Call
+                            </Button>
+                            <Button 
+                                size="small" 
+                                variant="outlined" 
+                                color="inherit" 
+                                onClick={handleDismissActiveCall}
+                                sx={{ textTransform: "none", borderRadius: "8px", color: "#989a9c" }}
+                            >
+                                Dismiss
+                            </Button>
+                        </div>
+                    </div>
+                )}
 
                 {/* Dashboard Main Content (Zoom Desktop client setup) */}
                 <div className="meetContainer">
