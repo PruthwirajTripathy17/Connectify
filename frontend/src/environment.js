@@ -1,4 +1,4 @@
-let IS_PROD=false;
+let IS_PROD=true;
 const server = IS_PROD ?
 "https://connectifybackend-qpd2.onrender.com":
 "http://localhost:8000";
