@@ -58,7 +58,7 @@ export default function VideoMeetComponent() {
   let [audio, setAudio] = useState();
   let [screen, setscreen] = useState();
   let [showModal, setShowModal] = useState(false); // Default to chat closed
-  let [screenAvailable, setScreenAvailable] = useState();
+
 
   let [messages, setMessages] = useState([]);
   let [message, setMessage] = useState("");
@@ -139,11 +139,7 @@ export default function VideoMeetComponent() {
       setVideoAvailable(videoAvail);
       setAudioAvailable(audioAvail);
 
-      if (navigator.mediaDevices.getDisplayMedia) {
-        setScreenAvailable(true);
-      } else {
-        setScreenAvailable(false);
-      }
+
 
       if (stream) {
         window.localStream = stream;
@@ -458,7 +454,7 @@ export default function VideoMeetComponent() {
   let getMedia = () => {
     setVideo(videoAvailable);
     setAudio(audioAvailable);
-    setscreen(screenAvailable);
+    setscreen(false);
     connectToSocketServer();
   };
 
