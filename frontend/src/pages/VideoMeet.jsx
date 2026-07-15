@@ -36,7 +36,7 @@ const darkTheme = createTheme({
   },
 });
 
-const server_url = "http://localhost:8000";
+const server_url = `${server}`;
 var connections = {};
 const peerConfigConnections = {
   iceServers: [
