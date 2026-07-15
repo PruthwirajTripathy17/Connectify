@@ -771,7 +771,7 @@ export default function VideoMeetComponent() {
                     "&:hover": { bgcolor: screen === true ? "rgba(14,113,235,0.25)" : "rgba(255,255,255,0.08)" }
                   }}
                 >
-                  {screen === true ? <StopScreenShareIcon /> : <ScreenShareIcon />}
+                  {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
                 </IconButton>
 
                 <Badge badgeContent={newMessages} color="primary">
