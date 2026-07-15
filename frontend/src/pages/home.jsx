@@ -154,7 +154,7 @@ function HomeComponent() {
                                 onClick={() => handleJoinVideoCall(activeCall)}
                                 sx={{ textTransform: "none", borderRadius: "8px", fontWeight: 700 }}
                             >
-                                Rejoin Call
+                                Reconnect
                             </Button>
                             <Button 
                                 size="small" 

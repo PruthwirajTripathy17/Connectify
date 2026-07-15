@@ -246,6 +246,30 @@ export default function VideoMeetComponent() {
 
   useEffect(() => {
     getPermissions();
+    return () => {
+      // Disconnect socket connection on unmount
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+
+      // Close all active WebRTC peer connections on unmount
+      for (let id in connections) {
+        if (connections[id]) {
+          connections[id].close();
+        }
+      }
+      connections = {};
+
+      // Stop local media tracks
+      if (window.localStream) {
+        try {
+          window.localStream.getTracks().forEach((track) => track.stop());
+        } catch (e) {
+          console.log(e);
+        }
+        window.localStream = null;
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -372,6 +396,9 @@ export default function VideoMeetComponent() {
   };
 
   let connectToSocketServer = () => {
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+    }
     socketRef.current = io.connect(server_url, { secure: false });
     socketRef.current.on("signal", gotMessageFromServer);
     socketRef.current.on("connect", () => {
@@ -541,6 +568,20 @@ export default function VideoMeetComponent() {
       let tracks = localVideoRef.current.srcObject.getTracks();
       tracks.forEach((track) => track.stop());
     } catch (e) {}
+
+    // Disconnect socket connection
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+    }
+
+    // Close all WebRTC peer connections
+    for (let id in connections) {
+      if (connections[id]) {
+        connections[id].close();
+      }
+    }
+    connections = {};
+
     localStorage.removeItem("activeCall");
     routeTo("/home");
   };
@@ -709,18 +750,16 @@ export default function VideoMeetComponent() {
                   {video === true ? <VideocamIcon /> : <VideocamOffIcon />}
                 </IconButton>
 
-                {screenAvailable === true && (
-                  <IconButton 
-                    onClick={handleScreen} 
-                    sx={{ 
-                      color: screen === true ? "#0e71eb" : "white",
-                      bgcolor: screen === true ? "rgba(14,113,235,0.15)" : "rgba(255,255,255,0.03)",
-                      "&:hover": { bgcolor: screen === true ? "rgba(14,113,235,0.25)" : "rgba(255,255,255,0.08)" }
-                    }}
-                  >
-                    {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
-                  </IconButton>
-                )}
+                <IconButton 
+                  onClick={handleScreen} 
+                  sx={{ 
+                    color: screen === true ? "#0e71eb" : "white",
+                    bgcolor: screen === true ? "rgba(14,113,235,0.15)" : "rgba(255,255,255,0.03)",
+                    "&:hover": { bgcolor: screen === true ? "rgba(14,113,235,0.25)" : "rgba(255,255,255,0.08)" }
+                  }}
+                >
+                  {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
+                </IconButton>
 
                 <Badge badgeContent={newMessages} color="primary">
                   <IconButton 
