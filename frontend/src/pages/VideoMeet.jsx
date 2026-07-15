@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { TextField, Button, IconButton, Badge, createTheme, ThemeProvider, CssBaseline } from "@mui/material";
+import { TextField, Button, IconButton, Badge, createTheme, ThemeProvider, CssBaseline, Snackbar } from "@mui/material";
 import io from "socket.io-client";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
@@ -58,6 +58,8 @@ export default function VideoMeetComponent() {
   let [audio, setAudio] = useState();
   let [screen, setscreen] = useState();
   let [showModal, setShowModal] = useState(false); // Default to chat closed
+  let [snackbarOpen, setSnackbarOpen] = useState(false);
+  let [snackbarMessage, setSnackbarMessage] = useState("");
 
 
   let [messages, setMessages] = useState([]);
@@ -528,18 +530,33 @@ export default function VideoMeetComponent() {
 
   let getDisplayMedia = () => {
     if (screen) {
-      if (navigator.mediaDevices.getDisplayMedia) {
+      if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
         navigator.mediaDevices
           .getDisplayMedia({
             video: true,
             audio: true,
           })
           .then(getDisplayMediaSuccess)
-          .then((stream) => {})
           .catch((e) => {
             console.log(e);
+            setscreen(false);
+            setSnackbarMessage("Screen sharing cancelled or failed");
+            setSnackbarOpen(true);
           });
+      } else {
+        setscreen(false);
+        setSnackbarMessage("Screen sharing is not supported on mobile devices or this browser.");
+        setSnackbarOpen(true);
       }
+    } else {
+      if (window.localStream) {
+        try {
+          window.localStream.getTracks().forEach((track) => track.stop());
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      getUserMedia();
     }
   };
 
@@ -754,7 +771,7 @@ export default function VideoMeetComponent() {
                     "&:hover": { bgcolor: screen === true ? "rgba(14,113,235,0.25)" : "rgba(255,255,255,0.08)" }
                   }}
                 >
-                  {screen === true ? <ScreenShareIcon /> : <StopScreenShareIcon />}
+                  {screen === true ? <StopScreenShareIcon /> : <ScreenShareIcon />}
                 </IconButton>
 
                 <Badge badgeContent={newMessages} color="primary">
@@ -856,6 +873,12 @@ export default function VideoMeetComponent() {
             )}
           </div>
         )}
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={4000}
+          message={snackbarMessage}
+          onClose={() => setSnackbarOpen(false)}
+        />
       </div>
     </ThemeProvider>
   );

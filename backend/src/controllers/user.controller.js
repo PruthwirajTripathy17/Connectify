@@ -80,4 +80,43 @@ const addToHistory = async (req, res) => {
     res.json({ message: `Something went wrong ${e}` });
   }
 }
-export {login , register, getUserHistory , addToHistory};
+
+const deleteHistoryEntry = async (req, res) => {
+  const token = (req.body && req.body.token) || req.query.token;
+  const id = (req.body && req.body.id) || req.query.id;
+  if (!token || !id) {
+    return res.status(httpStatus.BAD_REQUEST).json({ message: "Token and ID are required" });
+  }
+  try {
+    const user = await User.findOne({ token });
+    if (!user) {
+      return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
+    }
+    const result = await Metting.deleteOne({ _id: id, user_id: user.username });
+    if (result.deletedCount === 0) {
+      return res.status(httpStatus.NOT_FOUND).json({ message: "Meeting history entry not found or unauthorized" });
+    }
+    return res.status(httpStatus.OK).json({ message: "Meeting history entry deleted successfully" });
+  } catch (e) {
+    return res.status(500).json({ message: `Something went wrong ${e}` });
+  }
+};
+
+const clearAllHistory = async (req, res) => {
+  const token = (req.body && req.body.token) || req.query.token;
+  if (!token) {
+    return res.status(httpStatus.BAD_REQUEST).json({ message: "Token is required" });
+  }
+  try {
+    const user = await User.findOne({ token });
+    if (!user) {
+      return res.status(httpStatus.NOT_FOUND).json({ message: "User not found" });
+    }
+    await Metting.deleteMany({ user_id: user.username });
+    return res.status(httpStatus.OK).json({ message: "All meeting history cleared successfully" });
+  } catch (e) {
+    return res.status(500).json({ message: `Something went wrong ${e}` });
+  }
+};
+
+export {login , register, getUserHistory , addToHistory, deleteHistoryEntry, clearAllHistory};

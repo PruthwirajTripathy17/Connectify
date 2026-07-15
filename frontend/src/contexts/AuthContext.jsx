@@ -84,10 +84,35 @@ export const AuthProvider = ({ children }) => {
         }
     }
     
-  
+    const deleteHistoryEntry = async (id) => {
+        try {
+            let request = await client.delete("/delete_activity", {
+                params: {
+                    token: localStorage.getItem("token"),
+                    id: id
+                }
+            });
+            return request.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    const clearAllHistory = async () => {
+        try {
+            let request = await client.delete("/clear_all_activity", {
+                params: {
+                    token: localStorage.getItem("token")
+                }
+            });
+            return request.data;
+        } catch (err) {
+            throw err;
+        }
+    }
     
     const data = {
-        userData, setUserData, addToUserHistory, getHistoryOfUser, handleRegister, handleLogin
+        userData, setUserData, addToUserHistory, getHistoryOfUser, handleRegister, handleLogin, deleteHistoryEntry, clearAllHistory
     }
 
     return (
